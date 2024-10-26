@@ -5,6 +5,8 @@ import org.http4s.client.Client
 import org.http4s.ember.client.EmberClientBuilder
 import com.estebanmarin.algebras.http.HttpClient
 import com.estebanmarin.algebras.models.APIResponse
+import com.estebanmarin.algebras.GraphDataStructure
+import com.estebanmarin.algebras.models.*
 
 // now that we have the data, we will 
 // Use the Bellman-Ford algorithm to detect negative weight cycles 
@@ -22,9 +24,12 @@ object ArbitragePuzzle extends IOApp.Simple:
     clientResource.use { client =>
       // instantiate algebras
       val httpClient: HttpClient[IO] = HttpClient.impl[IO]
+      val graphDataStructure: GraphDataStructure[IO] = GraphDataStructure.impl[IO]
       for 
         rateData: APIResponse <- httpClient.getRates(client)
+        graph: Graph <- graphDataStructure.createGraphfromRates(rateData.rates)
         _ <- IO.println(rateData.rates)  
+        // _ <- IO.println(graph.toString())  
       yield ()
 
     }

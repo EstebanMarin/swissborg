@@ -6,10 +6,15 @@ import io.circe.generic.semiauto.*
 import io.circe.syntax.*
 import org.http4s.EntityDecoder
 import cats.effect.kernel.Async
+import scala.CanEqual.derived
+import cats.Show
 
 type Token = String
 type Rate = Double
 type fromTokenToToken = (Token, Token)
+
+type Graph = Map[Token, Map[Token, Rate]]
+
 
 final case class APIResponse(rates: Map[fromTokenToToken, Rate])
 object APIResponse:

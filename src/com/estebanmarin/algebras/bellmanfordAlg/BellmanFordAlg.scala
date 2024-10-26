@@ -1,19 +1,18 @@
 package com.estebanmarin.algebras
 
+import com.estebanmarin.algebras.models.*
+
 // step 0.1 lets improve the modeling of the problem
 // step 1.0 lets build the graph from the data and build a suitable data structure to represent the graph
 // step 1.1 lets develop the algorithm 
 // step 2 lets develop the logarithmic transformation to detect arbitrage opportunities
 
 trait BellmanFordAlg [F[_]]:
-  def arbitrageOpportunity: F[Unit]
-  def createGraphrates(rates: Map[String, String]): F[Unit]
+  def arbitrageOpportunity(graph: Graph): F[Unit]
 
 object BellmanFordAlg:
     def impl[F[_]]: BellmanFordAlg[F] = new BellmanFordAlg[F]:
-      def arbitrageOpportunity: F[Unit] = ???
-      // Lets create 
-      def createGraphrates(rates: Map[String, String]): F[Unit] = 
+      def arbitrageOpportunity(graph: Graph): F[Unit] = 
         ???
 
 // Conceptual Explanation
