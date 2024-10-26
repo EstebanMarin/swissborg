@@ -1,5 +1,8 @@
 # Swissborg application
 
+Please review the commented git history so reviewers can see the thought
+process of the application
+
 ## Commands
 
 Compile

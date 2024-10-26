@@ -12,16 +12,14 @@ import com.estebanmarin.algebras.models.APIResponse
 import org.http4s.circe.*
 import org.http4s.*
 
-
-
 trait HttpClient[F[_]]:
   def getRates(client: Client[F]): F[APIResponse]
 
 object HttpClient:
 
   def impl[F[_]: Async]: HttpClient[F] = new HttpClient[F]:
-    def getRates(client: Client[F]): F[APIResponse] = 
-        val request = 
-            Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
-            .withHeaders(Accept(MediaType.application.json))
-        client.expect[APIResponse](request)
+    def getRates(client: Client[F]): F[APIResponse] =
+      val request =
+        Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
+          .withHeaders(Accept(MediaType.application.json))
+      client.expect[APIResponse](request)

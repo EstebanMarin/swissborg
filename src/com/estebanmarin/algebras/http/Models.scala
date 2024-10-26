@@ -12,5 +12,5 @@ final case class Token(name: String) derives Codec.AsObject
 final case class Rate(name: Token, value: Double) derives Codec.AsObject
 final case class APIResponse(rates: Map[String, String]) derives Codec.AsObject
 object APIResponse:
-    given Codec[APIResponse] = deriveCodec[APIResponse] 
-    given [F[_]: Async]: EntityDecoder[F, APIResponse] = jsonOf[F, APIResponse]
+  given Codec[APIResponse] = deriveCodec[APIResponse]
+  given [F[_]: Async]: EntityDecoder[F, APIResponse] = jsonOf[F, APIResponse]
