@@ -32,5 +32,5 @@ object APIResponseRefactor:
     case (from, to) => s"$from-$to"
   }
 
-  given Codec[APIResponseRefactor] = deriveCodec[APIResponseRefactor]
+  given Codec[APIResponseRefactor] = ???
   given [F[_]: Async]: EntityDecoder[F, APIResponseRefactor] = jsonOf[F, APIResponseRefactor]

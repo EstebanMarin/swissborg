@@ -19,13 +19,10 @@ trait HttpClient[F[_]]:
 object HttpClient:
 
   def impl[F[_]: Async]: HttpClient[F] = new HttpClient[F]:
+    val request =
+    Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
+      .withHeaders(Accept(MediaType.application.json))
     def getRates(client: Client[F]): F[APIResponse] =
-      val request =
-        Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
-          .withHeaders(Accept(MediaType.application.json))
       client.expect[APIResponse](request)
-      def getRates2(client: Client[F]): F[APIResponseRefactor] =
-        val request =
-          Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
-            .withHeaders(Accept(MediaType.application.json))
-        client.expect[APIResponseRefactor](request)
+    def getRates2(client: Client[F]): F[APIResponseRefactor] =
+      client.expect[APIResponseRefactor](request)
