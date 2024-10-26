@@ -14,7 +14,6 @@ import org.http4s.*
 
 trait HttpClient[F[_]]:
   def getRates(client: Client[F]): F[APIResponse]
-  def getRates2(client: Client[F]): F[APIResponseRefactor]
 
 object HttpClient:
 
@@ -24,5 +23,3 @@ object HttpClient:
       .withHeaders(Accept(MediaType.application.json))
     def getRates(client: Client[F]): F[APIResponse] =
       client.expect[APIResponse](request)
-    def getRates2(client: Client[F]): F[APIResponseRefactor] =
-      client.expect[APIResponseRefactor](request)

@@ -7,21 +7,22 @@ import io.circe.syntax.*
 import org.http4s.EntityDecoder
 import cats.effect.kernel.Async
 
-// Double probably might not be the best choice for a value, but it's just an example
-// final case class Token(name: String) derives Codec.AsObject
-// final case class Rate(value: Double) derives Codec.AsObject
-final case class APIResponse(rates: Map[String, String]) derives Codec.AsObject
-object APIResponse:
-  given Codec[APIResponse] = deriveCodec[APIResponse]
-  given [F[_]: Async]: EntityDecoder[F, APIResponse] = jsonOf[F, APIResponse]
-
-
 type Token = String
 type Rate = Double
 type fromTokenToToken = (Token, Token)
 
-final case class APIResponseRefactor(rates: Map[fromTokenToToken, Rate])
-object APIResponseRefactor:
+final case class APIResponse(rates: Map[fromTokenToToken, Rate])
+object APIResponse:
+  given KeyDecoder[fromTokenToToken] = KeyDecoder.decodeKeyString.map { str =>
+    str.split("-") match
+      case Array(from, to) => (from, to)
+      case _ => throw new IllegalArgumentException("Invalid token pair format")
+  }
+
+  given KeyEncoder[fromTokenToToken] = KeyEncoder.encodeKeyString.contramap {
+    case (from, to) => s"$from-$to"
+  }
+
   given Decoder[fromTokenToToken] = Decoder.decodeString.emap { str =>
     str.split("-") match
       case Array(from, to) => Right((from, to))
@@ -32,5 +33,16 @@ object APIResponseRefactor:
     case (from, to) => s"$from-$to"
   }
 
-  given Codec[APIResponseRefactor] = ???
-  given [F[_]: Async]: EntityDecoder[F, APIResponseRefactor] = jsonOf[F, APIResponseRefactor]
+  given Decoder[APIResponse] = Decoder.instance { cursor =>
+    for
+      rates <- cursor.downField("rates").as[Map[fromTokenToToken, Rate]]
+    yield APIResponse(rates)
+  }
+
+  given Encoder[APIResponse] = Encoder.instance { response =>
+    Json.obj(
+      "rates" -> response.rates.asJson
+    )
+  }
+  
+  given [F[_]: Async]: EntityDecoder[F, APIResponse] = jsonOf[F, APIResponse]
