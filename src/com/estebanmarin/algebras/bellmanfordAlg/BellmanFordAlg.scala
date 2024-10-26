@@ -1,7 +1,8 @@
 package com.estebanmarin.algebras
 
-// step 1 lets develop the algorithm 
-// step 2 lets develop the logarithmic transformation
+// step 1.0 lets build the graph from the data and build a suitable data structure to represent the graph
+// step 1.1 lets develop the algorithm 
+// step 2 lets develop the logarithmic transformation to detect arbitrage opportunities
 
 trait BellmanFordAlg {
   
