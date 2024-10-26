@@ -14,7 +14,7 @@ import org.http4s.MediaType
 // "https://api.swissborg.io/v1/challenge/rates"
 // Lets create a http4s client
 
-object Hello extends IOApp.Simple:
+object ArbitragePuzzle extends IOApp.Simple:
   // Create an HttpClient resource
   def clientResource: Resource[IO, Client[IO]] =
     EmberClientBuilder.default[IO].build
