@@ -5,6 +5,6 @@
 //> using dependency "io.circe::circe-core:0.14.10"
 //> using dependency "io.circe::circe-generic:0.14.10"
 //> using dependency "io.circe::circe-parser:0.14.10"
-//> using dependency "org.typelevel::cats-core:2.6.1"
-//> using dependency "org.typelevel::cats-kernel:2.6.1"
+//> using dependency "org.typelevel::cats-core:2.12.0"
+//> using dependency "org.typelevel::cats-kernel:2.12.0"
 

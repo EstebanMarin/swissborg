@@ -8,12 +8,13 @@ import org.http4s.Method.*
 import org.http4s.Request
 import org.http4s.headers.Accept
 import org.http4s.MediaType
-import com.estebanmarin.algebras.models.APIResponse
+import com.estebanmarin.algebras.models.*
 import org.http4s.circe.*
 import org.http4s.*
 
 trait HttpClient[F[_]]:
   def getRates(client: Client[F]): F[APIResponse]
+  def getRates2(client: Client[F]): F[APIResponseRefactor]
 
 object HttpClient:
 
@@ -23,3 +24,8 @@ object HttpClient:
         Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
           .withHeaders(Accept(MediaType.application.json))
       client.expect[APIResponse](request)
+      def getRates2(client: Client[F]): F[APIResponseRefactor] =
+        val request =
+          Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
+            .withHeaders(Accept(MediaType.application.json))
+        client.expect[APIResponseRefactor](request)
