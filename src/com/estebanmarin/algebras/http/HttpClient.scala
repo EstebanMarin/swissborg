@@ -19,7 +19,7 @@ object HttpClient:
 
   def impl[F[_]: Async]: HttpClient[F] = new HttpClient[F]:
     val request =
-    Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
-      .withHeaders(Accept(MediaType.application.json))
+      Request[F](GET, uri"https://api.swissborg.io/v1/challenge/rates")
+        .withHeaders(Accept(MediaType.application.json))
     def getRates(client: Client[F]): F[APIResponse] =
       client.expect[APIResponse](request)

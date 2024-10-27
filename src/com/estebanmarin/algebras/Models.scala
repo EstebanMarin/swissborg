@@ -15,7 +15,6 @@ type fromTokenToToken = (Token, Token)
 
 type Graph = Map[Token, Map[Token, Rate]]
 
-
 final case class APIResponse(rates: Map[fromTokenToToken, Rate])
 object APIResponse:
   given KeyDecoder[fromTokenToToken] = KeyDecoder.decodeKeyString.map { str =>
@@ -31,7 +30,7 @@ object APIResponse:
   given Decoder[fromTokenToToken] = Decoder.decodeString.emap { str =>
     str.split("-") match
       case Array(from, to) => Right((from, to))
-      case _ => Left("Invalid token pair format")
+      case _               => Left("Invalid token pair format")
   }
 
   given Encoder[fromTokenToToken] = Encoder.encodeString.contramap {
@@ -39,8 +38,7 @@ object APIResponse:
   }
 
   given Decoder[APIResponse] = Decoder.instance { cursor =>
-    for
-      rates <- cursor.downField("rates").as[Map[fromTokenToToken, Rate]]
+    for rates <- cursor.downField("rates").as[Map[fromTokenToToken, Rate]]
     yield APIResponse(rates)
   }
 
@@ -49,5 +47,5 @@ object APIResponse:
       "rates" -> response.rates.asJson
     )
   }
-  
+
   given [F[_]: Async]: EntityDecoder[F, APIResponse] = jsonOf[F, APIResponse]
