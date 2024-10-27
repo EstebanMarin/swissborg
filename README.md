@@ -23,3 +23,9 @@ test
 ```bash
 scala-cli test .
 ```
+
+format
+
+```bash
+scala-cli fmt .
+```

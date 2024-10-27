@@ -22,11 +22,14 @@ object ArbitragePuzzle extends IOApp.Simple:
     clientResource.use { client =>
       // instantiate algebras
       val httpClient: HttpClient[IO] = HttpClient.impl[IO]
-      val graphDataStructure: GraphDataStructure[IO] = GraphDataStructure.impl[IO]
+      val graphDataStructure: GraphDataStructure[IO] =
+        GraphDataStructure.impl[IO]
       for
         rateData: APIResponse <- httpClient.getRates(client)
-        graph: GraphLogarithmicSpace <- graphDataStructure.createGraphfromRates(rateData.rates)
-        _ <- IO.println(graph)  
+        graph: GraphLogarithmicSpace <- graphDataStructure.createGraphfromRates(
+          rateData.rates
+        )
+        _ <- IO.println(graph)
       yield ()
 
     }

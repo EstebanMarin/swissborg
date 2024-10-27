@@ -44,3 +44,7 @@ object BellmanFordAlg:
 // An arbitrage opportunity exists if: [ \log(r_{AB}) + \log(r_{BC}) + \log(r_{CA}) > 0 ]
 // By multiplying by -1, we get: [ -\log(r_{AB}) + -\log(r_{BC}) + -\log(r_{CA}) < 0 ]
 // This means that the sum of the weights in the transformed graph is negative, indicating a negative weight cycle.
+// AND bellman ford algorithm is used to detect negative weight cycles in a graph
+
+// see https://www.ijisrt.com/assets/upload/files/IJISRT20MAY047.pdf
+// see also https://www.thealgorists.com/Algo/ShortestPaths/Arbitrage
