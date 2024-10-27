@@ -11,3 +11,7 @@ object GraphDataStructure:
         graph + (from -> updatedMap)
     }
   }
+
+  def printGraph(graph: Graph): IO[Unit] = IO {
+    println(graph)
+  }

@@ -3,16 +3,18 @@ package com.estebanmarin.algebras
 import com.estebanmarin.algebras.models.*
 import cats.effect.*
 
-class GraphDataStructureSuite extends munit.CatsEffectSuite {
+object GraphDataStructureSuite extends munit.CatsEffectSuite {
   test("GraphDataStructure should create a graph from rates") {
     val rates: Map[fromTokenToToken, Rate] = Map(
       ("A", "A") -> 1,
       ("A", "B") -> 12,
-      ("B", "C") -> 0.5,
+      ("A", "C") -> 0.5,
+      ("B", "A") -> 0.5,
       ("B", "B") -> 1,
-      ("C", "B") -> 2,
-      ("C", "C") -> 1,
-      ("C", "A") -> 1.5
+      ("B", "C") -> 2,
+      ("C", "A") -> 1,
+      ("C", "B") -> 1.5,
+      ("C", "C") -> 1
     )
     val expectedGraph: Graph = Map(
       "A" -> Map(("A", 1), ("B", 12)),

@@ -22,10 +22,21 @@ object ArbitragePuzzle extends IOApp.Simple:
     clientResource.use { client =>
       // instantiate algebras
       val httpClient: HttpClient[IO] = HttpClient.impl[IO]
+      val rates2: Map[fromTokenToToken, Rate] = Map(
+        ("A", "A") -> 1.0,
+        ("A", "B") -> 12.0,
+        ("B", "C") -> 0.5,
+        ("B", "B") -> 1.0,
+        ("C", "B") -> 2.0,
+        ("C", "C") -> 1.0,
+        ("C", "A") -> 1.5
+      )
       for
         rateData: APIResponse <- httpClient.getRates(client)
-        graph: Graph <- GraphDataStructure.createGraphfromRates(rateData.rates)
-        _ <- IO.println(rateData.rates)
+        // graph: Graph <- GraphDataStructure.createGraphfromRates(rateData.rates)
+        graph: Graph <- GraphDataStructure.createGraphfromRates(rates2)
+        // _ <- IO.println(rateData.rates)
+        _ <- IO.println(graph)  
       // _ <- IO.println(graph.toString())
       yield ()
 
