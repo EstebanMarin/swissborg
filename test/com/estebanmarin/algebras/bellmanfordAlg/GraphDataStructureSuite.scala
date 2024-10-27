@@ -3,7 +3,7 @@ package com.estebanmarin.algebras
 import com.estebanmarin.algebras.models.*
 import cats.effect.*
 
-object GraphDataStructureSuite extends munit.CatsEffectSuite {
+class  GraphDataStructureSuite extends munit.CatsEffectSuite {
   // Define the GraphDataStructure instance
   val graphDataStructure: GraphDataStructure[IO] = GraphDataStructure.impl[IO]
 
