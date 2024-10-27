@@ -19,12 +19,12 @@ class  GraphDataStructureSuite extends munit.CatsEffectSuite {
       ("C", "B") -> 1.5,
       ("C", "C") -> 1
     )
-    val expectedGraph: Graph = Map(
-      "A" -> Map(("A", 1), ("B", 12)),
-      "B" -> Map(("C", 0.5), ("B", 1)),
-      "C" -> Map(("B", 2), ("C", 1), ("A", 1.5))
+    val expectedGraph: GraphLogarithmicSpace = Map(
+      "A" -> Map("A" -> (1, 0.0), "B" -> (12, -2.4849066497880004), "C" -> (0.5, -0.6931471805599453)),
+      "B" -> Map("A" -> (0.5, -0.6931471805599453), "B" -> (1, 0.0), "C" -> (2, -0.6931471805599453)),
+      "C" -> Map("A" -> (1, 0.0), "B" -> (1.5, -0.4054651081081644), "C" -> (1, 0.0))
     )
-    val result: Graph =
+    val result: GraphLogarithmicSpace =
       graphDataStructure.createGraphfromRates(rates).unsafeRunSync()
     assertEquals(result, expectedGraph)
   }

@@ -25,7 +25,7 @@ object ArbitragePuzzle extends IOApp.Simple:
       val graphDataStructure: GraphDataStructure[IO] = GraphDataStructure.impl[IO]
       for
         rateData: APIResponse <- httpClient.getRates(client)
-        graph: Graph <- graphDataStructure.createGraphfromRates(rateData.rates)
+        graph: GraphLogarithmicSpace <- graphDataStructure.createGraphfromRates(rateData.rates)
         _ <- IO.println(graph)  
       yield ()
 

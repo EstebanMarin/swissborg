@@ -11,9 +11,10 @@ import cats.Show
 
 type Token = String
 type Rate = Double
+type RLogarithmicScale = Double
 type fromTokenToToken = (Token, Token)
-
-type Graph = Map[Token, Map[Token, Rate]]
+type Weight = (Rate, RLogarithmicScale)
+type GraphLogarithmicSpace = Map[Token, Map[Token, Weight]]
 
 final case class APIResponse(rates: Map[fromTokenToToken, Rate])
 object APIResponse:

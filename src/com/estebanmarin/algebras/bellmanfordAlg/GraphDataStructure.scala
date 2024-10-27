@@ -6,18 +6,19 @@ import cats.Monad
 import cats.implicits.given
 
 trait GraphDataStructure[F[_]]:
-  def createGraphfromRates(rates: Map[fromTokenToToken, Rate]): F[Graph]
-  def printGraph(graph: Graph): F[String]
+  def createGraphfromRates(rates: Map[fromTokenToToken, Rate]): F[GraphLogarithmicSpace]
+  def printGraph(graph: GraphLogarithmicSpace): F[String]
 object GraphDataStructure:
   def impl[F[_]: Monad]: GraphDataStructure[F] = new GraphDataStructure[F]:
-    def createGraphfromRates(rates: Map[fromTokenToToken, Rate]): F[Graph] = 
-      val graphs = rates.foldLeft(Map.empty[Token, Map[Token, Rate]]) {
+    def createGraphfromRates(rates: Map[fromTokenToToken, Rate]): F[GraphLogarithmicSpace] =
+      val graphs = rates.foldLeft(Map.empty[Token, Map[Token, Weight]]) {
         case (graph, ((from, to), rate)) =>
-          val updatedMap = graph.getOrElse(from, Map.empty) + (to -> rate)
+          val weight = (rate, -math.log(rate))
+          val updatedMap = graph.getOrElse(from, Map.empty) + (to -> weight)
           graph + (from -> updatedMap)
       }
       graphs.pure[F]
 
-    def printGraph(graph: Graph): F[String] = 
+    def printGraph(graph: GraphLogarithmicSpace): F[String] = 
       graph.toString().pure[F]
     

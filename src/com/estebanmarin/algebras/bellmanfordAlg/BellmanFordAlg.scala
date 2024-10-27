@@ -8,11 +8,11 @@ import com.estebanmarin.algebras.models.*
 // step 2 lets develop the logarithmic transformation to detect arbitrage opportunities
 
 trait BellmanFordAlg[F[_]]:
-  def arbitrageOpportunity(graph: Graph): F[Unit]
+  def arbitrageOpportunity(graph: GraphLogarithmicSpace): F[Unit]
 
 object BellmanFordAlg:
   def impl[F[_]]: BellmanFordAlg[F] = new BellmanFordAlg[F]:
-    def arbitrageOpportunity(graph: Graph): F[Unit] =
+    def arbitrageOpportunity(graph: GraphLogarithmicSpace): F[Unit] =
       ???
 
 // Conceptual Explanation
