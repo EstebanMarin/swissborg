@@ -4,6 +4,9 @@ import com.estebanmarin.algebras.models.*
 import cats.effect.*
 
 object GraphDataStructureSuite extends munit.CatsEffectSuite {
+  // Define the GraphDataStructure instance
+  val graphDataStructure: GraphDataStructure[IO] = GraphDataStructure.impl[IO]
+
   test("GraphDataStructure should create a graph from rates") {
     val rates: Map[fromTokenToToken, Rate] = Map(
       ("A", "A") -> 1,
@@ -22,7 +25,7 @@ object GraphDataStructureSuite extends munit.CatsEffectSuite {
       "C" -> Map(("B", 2), ("C", 1), ("A", 1.5))
     )
     val result: Graph =
-      GraphDataStructure.createGraphfromRates(rates).unsafeRunSync()
+      graphDataStructure.createGraphfromRates(rates).unsafeRunSync()
     assertEquals(result, expectedGraph)
   }
 
