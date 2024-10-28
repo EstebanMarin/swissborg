@@ -8,6 +8,7 @@ class BellmanFordAlgSuite extends munit.CatsEffectSuite {
   val bellmanFordAlg: BellmanFordAlg[IO] = BellmanFordAlg.impl[IO]
 
   test("BellmanFordAlg should arrive to the correct result simple example") {
+    // see https://youtu.be/FtN3BYH2Zes?si=CFsbPJ4Jr0GNI57p&t=760
     val graph: GraphLogarithmicSpace = Map(
       "1" -> Map("2" -> (4, 0.602), "4" -> (5, 0.699)),
       "3" -> Map("2" -> (-10, 0.0)),
