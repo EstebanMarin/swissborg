@@ -23,7 +23,7 @@ object GraphDataStructure:
     ): F[Map[Token, Double]] =
       rates.keys
         .foldLeft(Map.empty[Token, Double]) { case (vertices, (from, to)) =>
-          vertices + (from -> Double.MaxValue)
+          vertices + (from -> Double.PositiveInfinity)
         }
         .toSet
         .toMap

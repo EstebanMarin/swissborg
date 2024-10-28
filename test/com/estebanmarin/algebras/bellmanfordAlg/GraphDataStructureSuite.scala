@@ -17,10 +17,10 @@ class GraphDataStructureSuite extends munit.CatsEffectSuite {
     )
     val expectedEdges: Map[Token, Double] =
       Map(
-        "1" -> Double.MaxValue,
-        "4" -> Double.MaxValue,
-        "3" -> Double.MaxValue,
-        "2" -> Double.MaxValue
+        "1" -> Double.PositiveInfinity,
+        "4" -> Double.PositiveInfinity,
+        "3" -> Double.PositiveInfinity,
+        "2" -> Double.PositiveInfinity
       )
     val result: Map[Token, Double] =
       graphDataStructure.createUniqueVertices(rates).unsafeRunSync()

@@ -31,7 +31,7 @@ trait BellmanFordAlg[F[_]]:
       uniqueVertices: Map[Token, Double],
       idStartingVertex: Token
   ): F[Map[Token, RLogarithmicScale]]
-  def negativeCycles(
+  def detectNegativeCyclesGiveNodes(
       graph: GraphLogarithmicSpace,
       knowOptimalDistance: Map[Token, RLogarithmicScale],
       predecessors: Map[Token, Token],
@@ -57,14 +57,16 @@ object BellmanFordAlg:
           predecessors,
           uniqueVertices.size
         )
-        arbitrageOportunity <- negativeCycles(
+        arbitrageOportunity <- detectNegativeCyclesGiveNodes(
           graph,
           finalDistance,
           predecessors,
           uniqueVertices.size
         )
         _ <- Sync[F].delay(
-          println(s"Arbitrage Oportunity: ${finalDistance =!= arbitrageOportunity}")
+          println(
+            s"Arbitrage Oportunity: ${finalDistance =!= arbitrageOportunity}"
+          )
         )
       yield finalDistance
 
@@ -87,13 +89,23 @@ object BellmanFordAlg:
 
     // once you know the optimal distance, you can check for negative weight cycles
     // thats running the algorithm again and checking if the distance  relaxed is the same as where we started
-    def negativeCycles(
+    def detectNegativeCyclesGiveNodes(
         graph: GraphLogarithmicSpace,
         knowOptimalDistance: Map[Token, RLogarithmicScale],
         predecessors: Map[Token, Token],
         iterations: Int
     ): F[Map[String, Double]] =
-      relaxEdges(graph, knowOptimalDistance, predecessors, iterations)
+      Sync[F].delay {
+        val multableDistances = mutable.Map.from(knowOptimalDistance)
+        for _ <- 1 to iterations do
+          for (u, neighbors) <- graph do
+            for (v, weight) <- neighbors do
+              if multableDistances(u) + weight._1 < multableDistances(v) then
+                // this way we know what nodes are part of the negative cycle
+                multableDistances.update(v, Double.NegativeInfinity)
+                // predecessors.update(v, u)
+        multableDistances.toMap
+      }
 
 // Conceptual Explanation
 // Currency Exchange as a Graph:

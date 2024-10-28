@@ -36,9 +36,15 @@ class BellmanFordAlgSuite extends munit.CatsEffectSuite {
 
     val secondPass =
       bellmanFordAlg
-        .negativeCycles(graph, relaxedSystem, Map.empty, uniqueVertices.size)
+        .detectNegativeCyclesGiveNodes(
+          graph,
+          relaxedSystem,
+          Map.empty,
+          uniqueVertices.size
+        )
         .unsafeRunSync()
 
+    println(s"$secondPass")
     // detected negative cycle
     assert(
       relaxedSystem =!= secondPass
@@ -71,7 +77,12 @@ class BellmanFordAlgSuite extends munit.CatsEffectSuite {
     // there are no negative cycles
     val secondPass =
       bellmanFordAlg
-        .negativeCycles(graph, relaxedSystem, Map.empty, uniqueVertices.size)
+        .detectNegativeCyclesGiveNodes(
+          graph,
+          relaxedSystem,
+          Map.empty,
+          uniqueVertices.size
+        )
         .unsafeRunSync()
 
     assertEquals(
