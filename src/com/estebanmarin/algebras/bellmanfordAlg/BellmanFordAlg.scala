@@ -64,7 +64,7 @@ object BellmanFordAlg:
           uniqueVertices.size
         )
         _ <- Sync[F].delay(
-          println(s"Arbitrage Oportunity: $arbitrageOportunity")
+          println(s"Arbitrage Oportunity: ${finalDistance =!= arbitrageOportunity}")
         )
       yield finalDistance
 

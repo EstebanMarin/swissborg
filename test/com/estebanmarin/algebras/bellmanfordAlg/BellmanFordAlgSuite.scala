@@ -39,6 +39,7 @@ class BellmanFordAlgSuite extends munit.CatsEffectSuite {
         .negativeCycles(graph, relaxedSystem, Map.empty, uniqueVertices.size)
         .unsafeRunSync()
 
+    // detected negative cycle
     assert(
       relaxedSystem =!= secondPass
     )
@@ -77,6 +78,7 @@ class BellmanFordAlgSuite extends munit.CatsEffectSuite {
       relaxedSystem,
       Map("1" -> 0.0, "2" -> -2.0, "3" -> 8.0, "4" -> 5.0)
     )
+    // arrived to the correct result
     assert(
       relaxedSystem === secondPass
     )
