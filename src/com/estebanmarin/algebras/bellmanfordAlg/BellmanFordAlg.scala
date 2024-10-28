@@ -55,11 +55,9 @@ object BellmanFordAlg:
         _ <- Sync[F].delay(println(s"Starting Algorithm"))
         distanceFromToken: Map[Token, Double] =
           uniqueVertices.updated(idStartingVertex, 0.0)
-        predecessors: Map[Token, Token] = Map.empty
         finalDistance: Map[Token, RLogarithmicScale] <- relaxEdges(
           graph,
           distanceFromToken,
-          predecessors,
           uniqueVertices.size,
           logarithmicSpace
         )
@@ -68,7 +66,6 @@ object BellmanFordAlg:
     private def relaxEdges(
         graph: GraphLogarithmicSpace,
         distances: Map[Token, RLogarithmicScale],
-        predecessors: Map[Token, Token],
         iterations: Int,
         logarithmicSpace: Boolean
     ): F[Map[String, Double]] =
@@ -81,7 +78,6 @@ object BellmanFordAlg:
                 if logarithmicSpace then weight._2 else weight._1
               if multableDistances(u) + weightValue < multableDistances(v) then
                 multableDistances.update(v, multableDistances(u) + weightValue)
-                // predecessors.update(v, u)
         multableDistances.toMap
       }
 
