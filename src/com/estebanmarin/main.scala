@@ -37,9 +37,21 @@ object ArbitragePuzzle extends IOApp.Simple:
           graph,
           edges,
           uniqueVertices,
-          "BTC"
+          "BTC",
+          true
         ) // run the algorithm
-        _ <- IO(println(relaxedSystem))
+        arbitrageOpportunity <- bellmanFordAlg.detectNegativeCyclesGiveNodes(
+          graph,
+          relaxedSystem,
+          Map.empty,
+          uniqueVertices.size,
+          true
+        ) // detect arbitrage opportunities
+        _ <- Sync[IO].delay(
+          println(
+            s"Follow this arbirtrage opportunity => ${arbitrageOpportunity.keys.mkString(" -> ")}"
+          )
+        )
       yield ()
 
     }

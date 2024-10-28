@@ -11,6 +11,7 @@ import cats.implicits.given
 
 import scala.collection.mutable
 import scala.annotation.tailrec
+import cats.instances.boolean
 
 // step 0.1 lets improve the modeling of the problem
 // step 1.0 lets build the graph from the data and build a suitable data structure to represent the graph
@@ -29,22 +30,26 @@ trait BellmanFordAlg[F[_]]:
       graph: GraphLogarithmicSpace,
       edges: Map[fromTokenToToken, RLogarithmicScale],
       uniqueVertices: Map[Token, Double],
-      idStartingVertex: Token
+      idStartingVertex: Token,
+      logarithmicSpace: Boolean
   ): F[Map[Token, RLogarithmicScale]]
   def detectNegativeCyclesGiveNodes(
       graph: GraphLogarithmicSpace,
       knowOptimalDistance: Map[Token, RLogarithmicScale],
       predecessors: Map[Token, Token],
-      iterations: Int
+      iterations: Int,
+      logarithmicSpace: Boolean
   ): F[Map[String, Double]]
 
 object BellmanFordAlg:
   def impl[F[_]: Sync]: BellmanFordAlg[F] = new BellmanFordAlg[F]:
+
     def bellmanFordAlg(
         graph: GraphLogarithmicSpace,
         edges: Map[fromTokenToToken, RLogarithmicScale],
         uniqueVertices: Map[Token, Double],
-        idStartingVertex: Token
+        idStartingVertex: Token,
+        logarithmicSpace: Boolean
     ): F[Map[Token, RLogarithmicScale]] =
       for
         _ <- Sync[F].delay(println(s"Starting Algorithm"))
@@ -55,18 +60,8 @@ object BellmanFordAlg:
           graph,
           distanceFromToken,
           predecessors,
-          uniqueVertices.size
-        )
-        arbitrageOportunity <- detectNegativeCyclesGiveNodes(
-          graph,
-          finalDistance,
-          predecessors,
-          uniqueVertices.size
-        )
-        _ <- Sync[F].delay(
-          println(
-            s"Arbitrage Oportunity: ${finalDistance =!= arbitrageOportunity}"
-          )
+          uniqueVertices.size,
+          logarithmicSpace
         )
       yield finalDistance
 
@@ -74,15 +69,18 @@ object BellmanFordAlg:
         graph: GraphLogarithmicSpace,
         distances: Map[Token, RLogarithmicScale],
         predecessors: Map[Token, Token],
-        iterations: Int
+        iterations: Int,
+        logarithmicSpace: Boolean
     ): F[Map[String, Double]] =
       Sync[F].delay {
         val multableDistances = mutable.Map.from(distances)
         for _ <- 1 to iterations do
           for (u, neighbors) <- graph do
             for (v, weight) <- neighbors do
-              if multableDistances(u) + weight._1 < multableDistances(v) then
-                multableDistances.update(v, multableDistances(u) + weight._1)
+              val weightValue =
+                if logarithmicSpace then weight._2 else weight._1
+              if multableDistances(u) + weightValue < multableDistances(v) then
+                multableDistances.update(v, multableDistances(u) + weightValue)
                 // predecessors.update(v, u)
         multableDistances.toMap
       }
@@ -93,14 +91,18 @@ object BellmanFordAlg:
         graph: GraphLogarithmicSpace,
         knowOptimalDistance: Map[Token, RLogarithmicScale],
         predecessors: Map[Token, Token],
-        iterations: Int
+        iterations: Int,
+        logarithmicSpace: Boolean
     ): F[Map[String, Double]] =
       Sync[F].delay {
         val multableDistances = mutable.Map.from(knowOptimalDistance)
         for _ <- 1 to iterations do
           for (u, neighbors) <- graph do
             for (v, weight) <- neighbors do
-              if multableDistances(u) + weight._1 < multableDistances(v) then
+              val weightValue =
+                if logarithmicSpace then weight._2 else weight._1
+
+              if multableDistances(u) + weightValue < multableDistances(v) then
                 // this way we know what nodes are part of the negative cycle
                 multableDistances.update(v, Double.NegativeInfinity)
                 // predecessors.update(v, u)
