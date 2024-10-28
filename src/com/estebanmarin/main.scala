@@ -31,19 +31,15 @@ object ArbitragePuzzle extends IOApp.Simple:
           graphDataStructure.createEdgesOfGraphLogarithmic(rateData.rates)
         graph: GraphLogarithmicSpace <-
           graphDataStructure.createGraphfromRates(rateData.rates)
-        _ <- bellmanFordAlg.bellmanFordAlg(
+        uniqueVertices: Map[Token, Double] <-
+          graphDataStructure.createUniqueVertices(rateData.rates)
+        relaxedSystem <- bellmanFordAlg.bellmanFordAlg(
           graph,
           edges,
-          ???,
-          ???
+          uniqueVertices,
+          "BTC"
         ) // run the algorithm
-        _ <- bellmanFordAlg.bellmanFordAlg(
-          graph,
-          rateData.rates,
-          ???,
-          ???
-        ) // run the algorithm
-        _ <- IO.println(edges)
+        _ <- IO(println(relaxedSystem))
       yield ()
 
     }

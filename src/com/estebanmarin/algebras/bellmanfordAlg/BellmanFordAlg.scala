@@ -10,6 +10,7 @@ import cats.implicits.given
 // as long as we con control the side effects and ensure that no data is shared
 
 import scala.collection.mutable
+import scala.annotation.tailrec
 
 // step 0.1 lets improve the modeling of the problem
 // step 1.0 lets build the graph from the data and build a suitable data structure to represent the graph
@@ -29,7 +30,7 @@ trait BellmanFordAlg[F[_]]:
       edges: Map[fromTokenToToken, RLogarithmicScale],
       uniqueVertices: Map[Token, Double],
       idStartingVertex: Token
-  ): F[Unit]
+  ): F[Map[Token, RLogarithmicScale]]
 
 object BellmanFordAlg:
   def impl[F[_]: Sync]: BellmanFordAlg[F] = new BellmanFordAlg[F]:
@@ -38,32 +39,81 @@ object BellmanFordAlg:
         edges: Map[fromTokenToToken, RLogarithmicScale],
         uniqueVertices: Map[Token, Double],
         idStartingVertex: Token
-    ): F[Unit] =
+    ): F[Map[Token, RLogarithmicScale]] =
       for
         _ <- Sync[F].delay(println(s"Starting Algorithm"))
-        predecessors =
-          mutable.Map[Token, Token]()
-      // _ <- Sync[F].delay(distances(vertices.head) = 0.0)
-      // _ <- relaxEdges(graph, distances, predecessors, vertices.size)
-      // cycle <- findNegativeCycle(graph, distances)
-      yield ()
+        distanceFromToken: Map[Token, Double] =
+          uniqueVertices.updated(idStartingVertex, 0.0)
+        predecessors: Map[Token, Token] = Map.empty
+        finalDistance: Map[Token, RLogarithmicScale] <- relaxEdges(
+          graph,
+          distanceFromToken,
+          predecessors,
+          uniqueVertices.size
+        )
+      yield finalDistance
 
-    def relaxEdges(
+    private def relaxEdges(
         graph: GraphLogarithmicSpace,
-        distances: mutable.Map[Token, RLogarithmicScale],
-        predecessors: mutable.Map[Token, Token],
+        distances: Map[Token, RLogarithmicScale],
+        predecessors: Map[Token, Token],
         iterations: Int
-    ): F[Unit] =
-      ???
+    ): F[Map[String, Double]] =
+      Sync[F].delay {
+        val multableDistances = mutable.Map.from(distances)
+        for _ <- 1 to iterations do
+          for (u, neighbors) <- graph do
+            for (v, weight) <- neighbors do
+              if multableDistances(u) + weight._2 < multableDistances(v) then
+                multableDistances.update(v, multableDistances(u) + weight._2)
+                // predecessors.update(v, u)
+        multableDistances.toMap
+      }
 
-    def findNegativeCycle(
-        graph: GraphLogarithmicSpace,
-        distances: mutable.Map[Token, RLogarithmicScale]
-    ): F[Option[List[Token]]] =
-      ???
+    // @tailrec
+    // private def relaxEdgesRecursively(
+    //     edges: Map[fromTokenToToken, RLogarithmicScale],
+    //     distances: Map[Token, Double],
+    //     predecessors: mutable.Map[Token, Token],
+    //     iterations: Int
+    // ): F[Map[Token, Double]] =
+    //   if iterations == 0 then Sync[F].pure(distances)
+    //   else
+    //     relaxEdges1Iteration(edges, distances, predecessors).flatMap { newDistances =>
+    //       relaxEdgesRecursively(edges, newDistances, predecessors, iterations - 1)
+    //     }
 
-    def constructCycle(start: Token): List[Token] =
-      ???
+    // def relaxEdges1Iteration(
+    //     edges: Map[fromTokenToToken, RLogarithmicScale],
+    //     distances: Map[Token, Double],
+    //     predecessors: mutable.Map[Token, Token],
+    // ): F[Map[Token, Double]] =
+    //   Sync[F].delay {
+    //     edges.foldLeft(distances) { case (distances, ((u, v), weight)) =>
+    //       if distances(u) + weight < distances(v) then
+    //         predecessors.update(v, u)
+    //         distances.updated(v, distances(u) + weight)
+    //       else distances
+    //     }
+    //   }
+
+    // def relaxEdges1Iteration(
+    //     edges: Map[fromTokenToToken, RLogarithmicScale],
+    //     distances: Map[Token, Double],
+    //     predecessors: mutable.Map[Token, Token],
+    // ): F[Map[Token, Double]] =
+    //   Sync[F].delay {edges.foldLeft(distances) { case (distances, ((u, v), weight)) =>
+    //     if distances(u) + weight < distances(v) then
+    //       predecessors.update(v, u)
+    //       distances.updated(v, distances(u) + weight)
+    //     else distances
+    //   }}
+
+    // def findNegativeCycle(
+    //     graph: GraphLogarithmicSpace,
+    //     distances: mutable.Map[Token, RLogarithmicScale]
+    // ): F[Option[List[Token]]] =
+    //   ???
 
 // Conceptual Explanation
 // Currency Exchange as a Graph:
