@@ -6,7 +6,26 @@ import cats.effect.*
 class GraphDataStructureSuite extends munit.CatsEffectSuite {
   // Define the GraphDataStructure instance
   val graphDataStructure: GraphDataStructure[IO] = GraphDataStructure.impl[IO]
-  test("Simple rate -1/log(rate) transformation") {
+  test("Create edges of graph") {
+    val rates: Map[fromTokenToToken, Rate] = Map(
+      ("1", "4") -> 5,
+      ("4", "3") -> 3,
+      ("3", "2") -> 10,
+      ("1", "2") -> 4
+    )
+    val expectedEdges: Map[fromTokenToToken, RLogarithmicScale] =
+      Map(
+        ("1", "4") -> -0.6989700043360189,
+        ("4", "3") -> -0.47712125471966244,
+        ("3", "2") -> -1,
+        ("1", "2") -> -0.6020599913279624
+      )
+    val result: Map[fromTokenToToken, RLogarithmicScale] =
+      graphDataStructure.createEdgesOfGraphLogarithmic(rates).unsafeRunSync()
+    assertEquals(result, expectedEdges)
+  }
+
+  test("Simple rate -log(rate) transformation") {
     val rates: Map[fromTokenToToken, Rate] = Map(
       ("A", "A") -> 1
     )
@@ -33,27 +52,5 @@ class GraphDataStructureSuite extends munit.CatsEffectSuite {
       graphDataStructure.createGraphfromRates(rates).unsafeRunSync()
     assertEquals(result, expectedGraph)
   }
-
-  // test("GraphDataStructure should create a graph from rates") {
-  //   val rates: Map[fromTokenToToken, Rate] = Map(
-  //     ("A", "A") -> 1,
-  //     ("A", "B") -> 12,
-  //     ("A", "C") -> 0.5,
-  //     ("B", "A") -> 0.5,
-  //     ("B", "B") -> 1,
-  //     ("B", "C") -> 2,
-  //     ("C", "A") -> 1,
-  //     ("C", "B") -> 1.5,
-  //     ("C", "C") -> 1
-  //   )
-  //   val expectedGraph: GraphLogarithmicSpace = Map(
-  //     "A" -> Map("A" -> (1, 0.0), "B" -> (12, -2.4849066497880004), "C" -> (0.5, -0.6931471805599453)),
-  //     "B" -> Map("A" -> (0.5, -0.6931471805599453), "B" -> (1, 0.0), "C" -> (2, -0.6931471805599453)),
-  //     "C" -> Map("A" -> (1, 0.0), "B" -> (1.5, -0.4054651081081644), "C" -> (1, 0.0))
-  //   )
-  //   val result: GraphLogarithmicSpace =
-  //     graphDataStructure.createGraphfromRates(rates).unsafeRunSync()
-  //   assertEquals(result, expectedGraph)
-  // }
 
 }

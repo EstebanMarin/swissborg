@@ -6,12 +6,25 @@ import cats.Monad
 import cats.implicits.given
 
 trait GraphDataStructure[F[_]]:
+  def createEdgesOfGraphLogarithmic(
+      rates: Map[fromTokenToToken, Rate]
+  ): F[Map[fromTokenToToken, RLogarithmicScale]]
   def createGraphfromRates(
       rates: Map[fromTokenToToken, Rate]
   ): F[GraphLogarithmicSpace]
   def printGraph(graph: GraphLogarithmicSpace): F[String]
 object GraphDataStructure:
   def impl[F[_]: Monad]: GraphDataStructure[F] = new GraphDataStructure[F]:
+    def createEdgesOfGraphLogarithmic(
+        rates: Map[fromTokenToToken, Rate]
+    ): F[Map[fromTokenToToken, RLogarithmicScale]] =
+      rates
+        .map { case ((from, to), rate) =>
+          val negativeLogarithmicSpace =
+            (-1) * math.log10(rate)
+          ((from, to), negativeLogarithmicSpace)
+        }
+        .pure[F]
     def createGraphfromRates(
         rates: Map[fromTokenToToken, Rate]
     ): F[GraphLogarithmicSpace] =

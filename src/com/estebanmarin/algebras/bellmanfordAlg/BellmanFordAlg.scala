@@ -1,18 +1,74 @@
 package com.estebanmarin.algebras
 
 import com.estebanmarin.algebras.models.*
+import cats.effect.*
+import cats.implicits.given
+
+// using mutable data structures for performance reasons
+// since we are could with a large amount of data
+// we are using a principle of localized functional programming
+// as long as we con control the side effects and ensure that no data is shared
+
+import scala.collection.mutable
 
 // step 0.1 lets improve the modeling of the problem
 // step 1.0 lets build the graph from the data and build a suitable data structure to represent the graph
 // step 1.1 lets develop the algorithm
 // step 2 lets develop the logarithmic transformation to detect arbitrage opportunities
 
+// Algorithm Bellman-Ford algorithm to detect negative weight cycles
+// in the logarithmic space, a negative weight cycle corresponds to an arbitrage opportunity.
+// 1. Initialize distances and predecessors.
+// 2. Relax edges repeatedly.
+// 3. Check for negative weight cycles.
+// 4. Return the result in the effect type F.
+
 trait BellmanFordAlg[F[_]]:
-  def arbitrageOpportunity(graph: GraphLogarithmicSpace): F[Unit]
+  def bellmanFordAlg(
+      graph: GraphLogarithmicSpace,
+      edges: Map[fromTokenToToken, RLogarithmicScale],
+      numberOfVertices: Int,
+      idStartingVertex: Token
+  ): F[Unit]
 
 object BellmanFordAlg:
-  def impl[F[_]]: BellmanFordAlg[F] = new BellmanFordAlg[F]:
-    def arbitrageOpportunity(graph: GraphLogarithmicSpace): F[Unit] =
+  def impl[F[_]: Sync]: BellmanFordAlg[F] = new BellmanFordAlg[F]:
+    def bellmanFordAlg(
+        graph: GraphLogarithmicSpace,
+        edges: Map[fromTokenToToken, RLogarithmicScale],
+        numberOfVertices: Int,
+        idStartingVertex: Token
+    ): F[Unit] =
+      for
+        _ <- Sync[F].delay(println(s"distances: eeeeeeeeee"))
+        // this does not represent ALL edges in a graph
+        allEdges = graph.keys.toList
+        _ <- Sync[F].delay(println(s"allEdges: $allEdges"))
+        distances =
+          mutable.Map(allEdges.map(_ -> Double.PositiveInfinity)*)
+        _ <- Sync[F].delay(println(s"distances: $distances"))
+        predecessors =
+          mutable.Map[Token, Token]()
+      // _ <- Sync[F].delay(distances(vertices.head) = 0.0)
+      // _ <- relaxEdges(graph, distances, predecessors, vertices.size)
+      // cycle <- findNegativeCycle(graph, distances)
+      yield ()
+
+    def relaxEdges(
+        graph: GraphLogarithmicSpace,
+        distances: mutable.Map[Token, RLogarithmicScale],
+        predecessors: mutable.Map[Token, Token],
+        iterations: Int
+    ): F[Unit] =
+      ???
+
+    def findNegativeCycle(
+        graph: GraphLogarithmicSpace,
+        distances: mutable.Map[Token, RLogarithmicScale]
+    ): F[Option[List[Token]]] =
+      ???
+
+    def constructCycle(start: Token): List[Token] =
       ???
 
 // Conceptual Explanation
