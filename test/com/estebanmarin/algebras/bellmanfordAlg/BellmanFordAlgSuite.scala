@@ -7,27 +7,32 @@ class BellmanFordAlgSuite extends munit.CatsEffectSuite {
   // Define the BellmanFordAlg instance
   val bellmanFordAlg: BellmanFordAlg[IO] = BellmanFordAlg.impl[IO]
 
-  test("BellmanFordAlg should detect negative weight cycles") {
+  test("BellmanFordAlg should arrive to the correct result simple example") {
     val graph: GraphLogarithmicSpace = Map(
-      "A" -> Map("B" -> (1, 0.0)),
-      "B" -> Map("C" -> (1, 0.0)),
-      "C" -> Map("A" -> (1, 0.0))
+      "1" -> Map("2" -> (4, 0.602), "4" -> (5, 0.699)),
+      "3" -> Map("2" -> (-10, 0.0)),
+      "4" -> Map("3" -> (3, 0.477))
     )
     val edges: Map[fromTokenToToken, RLogarithmicScale] = Map(
-      ("A", "B") -> 0.0,
-      ("B", "C") -> 0.0,
-      ("C", "A") -> 0.0
+      ("1", "2") -> 4,
+      ("1", "4") -> 5,
+      ("3", "2") -> -10,
+      ("4", "3") -> 3
     )
     val uniqueVertices: Map[Token, Double] = Map(
-      "A" -> 0.0,
-      "B" -> 0.0,
-      "C" -> 0.0
+      "1" -> 0,
+      "2" -> Double.PositiveInfinity,
+      "3" -> Double.PositiveInfinity,
+      "4" -> Double.PositiveInfinity
     )
     val relaxedSystem: Map[Token, Double] =
       bellmanFordAlg
-        .bellmanFordAlg(graph, edges, uniqueVertices, "A")
+        .bellmanFordAlg(graph, edges, uniqueVertices, "1")
         .unsafeRunSync()
-    assertEquals(relaxedSystem, Map("A" -> 0.0, "B" -> 1.0, "C" -> 2.0))
+    assertEquals(
+      relaxedSystem,
+      Map("1" -> 0.0, "2" -> -2.0, "3" -> 8.0, "4" -> 5.0)
+    )
   }
-  
+
 }
