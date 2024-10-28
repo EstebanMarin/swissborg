@@ -6,6 +6,26 @@ import cats.effect.*
 class GraphDataStructureSuite extends munit.CatsEffectSuite {
   // Define the GraphDataStructure instance
   val graphDataStructure: GraphDataStructure[IO] = GraphDataStructure.impl[IO]
+
+  test("Create unique Vertices") {
+    val rates: Map[fromTokenToToken, Rate] = Map(
+      ("1", "4") -> 5,
+      ("4", "3") -> 3,
+      ("3", "2") -> 10,
+      ("2", "2") -> 1,
+      ("1", "2") -> 4
+    )
+    val expectedEdges: Map[Token, Double] =
+      Map(
+        "1" -> Double.MaxValue,
+        "4" -> Double.MaxValue,
+        "3" -> Double.MaxValue,
+        "2" -> Double.MaxValue
+      )
+    val result: Map[Token, Double] =
+      graphDataStructure.createUniqueVertices(rates).unsafeRunSync()
+    assertEquals(result, expectedEdges)
+  }
   test("Create edges of graph") {
     val rates: Map[fromTokenToToken, Rate] = Map(
       ("1", "4") -> 5,

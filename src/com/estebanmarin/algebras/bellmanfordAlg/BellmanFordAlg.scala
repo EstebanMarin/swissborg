@@ -27,7 +27,7 @@ trait BellmanFordAlg[F[_]]:
   def bellmanFordAlg(
       graph: GraphLogarithmicSpace,
       edges: Map[fromTokenToToken, RLogarithmicScale],
-      numberOfVertices: Int,
+      uniqueVertices: Map[Token, Double],
       idStartingVertex: Token
   ): F[Unit]
 
@@ -36,17 +36,11 @@ object BellmanFordAlg:
     def bellmanFordAlg(
         graph: GraphLogarithmicSpace,
         edges: Map[fromTokenToToken, RLogarithmicScale],
-        numberOfVertices: Int,
+        uniqueVertices: Map[Token, Double],
         idStartingVertex: Token
     ): F[Unit] =
       for
-        _ <- Sync[F].delay(println(s"distances: eeeeeeeeee"))
-        // this does not represent ALL edges in a graph
-        allEdges = graph.keys.toList
-        _ <- Sync[F].delay(println(s"allEdges: $allEdges"))
-        distances =
-          mutable.Map(allEdges.map(_ -> Double.PositiveInfinity)*)
-        _ <- Sync[F].delay(println(s"distances: $distances"))
+        _ <- Sync[F].delay(println(s"Starting Algorithm"))
         predecessors =
           mutable.Map[Token, Token]()
       // _ <- Sync[F].delay(distances(vertices.head) = 0.0)

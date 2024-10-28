@@ -6,6 +6,9 @@ import cats.Monad
 import cats.implicits.given
 
 trait GraphDataStructure[F[_]]:
+  def createUniqueVertices(
+      rates: Map[fromTokenToToken, Rate]
+  ): F[Map[Token, Double]]
   def createEdgesOfGraphLogarithmic(
       rates: Map[fromTokenToToken, Rate]
   ): F[Map[fromTokenToToken, RLogarithmicScale]]
@@ -15,6 +18,16 @@ trait GraphDataStructure[F[_]]:
   def printGraph(graph: GraphLogarithmicSpace): F[String]
 object GraphDataStructure:
   def impl[F[_]: Monad]: GraphDataStructure[F] = new GraphDataStructure[F]:
+    def createUniqueVertices(
+        rates: Map[fromTokenToToken, Rate]
+    ): F[Map[Token, Double]] =
+      rates.keys
+        .foldLeft(Map.empty[Token, Double]) { case (vertices, (from, to)) =>
+          vertices + (from -> Double.MaxValue)
+        }
+        .toSet
+        .toMap
+        .pure[F]
     def createEdgesOfGraphLogarithmic(
         rates: Map[fromTokenToToken, Rate]
     ): F[Map[fromTokenToToken, RLogarithmicScale]] =
