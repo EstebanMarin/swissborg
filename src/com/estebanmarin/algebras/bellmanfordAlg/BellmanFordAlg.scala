@@ -31,6 +31,12 @@ trait BellmanFordAlg[F[_]]:
       uniqueVertices: Map[Token, Double],
       idStartingVertex: Token
   ): F[Map[Token, RLogarithmicScale]]
+  def negativeCycles(
+      graph: GraphLogarithmicSpace,
+      knowOptimalDistance: Map[Token, RLogarithmicScale],
+      predecessors: Map[Token, Token],
+      iterations: Int
+  ): F[Map[String, Double]]
 
 object BellmanFordAlg:
   def impl[F[_]: Sync]: BellmanFordAlg[F] = new BellmanFordAlg[F]:
@@ -51,6 +57,15 @@ object BellmanFordAlg:
           predecessors,
           uniqueVertices.size
         )
+        arbitrageOportunity <- negativeCycles(
+          graph,
+          finalDistance,
+          predecessors,
+          uniqueVertices.size
+        )
+        _ <- Sync[F].delay(
+          println(s"Arbitrage Oportunity: $arbitrageOportunity")
+        )
       yield finalDistance
 
     private def relaxEdges(
@@ -70,6 +85,15 @@ object BellmanFordAlg:
         multableDistances.toMap
       }
 
+    // once you know the optimal distance, you can check for negative weight cycles
+    // thats running the algorithm again and checking if the distance  relaxed is the same as where we started
+    def negativeCycles(
+        graph: GraphLogarithmicSpace,
+        knowOptimalDistance: Map[Token, RLogarithmicScale],
+        predecessors: Map[Token, Token],
+        iterations: Int
+    ): F[Map[String, Double]] =
+      relaxEdges(graph, knowOptimalDistance, predecessors, iterations)
 
 // Conceptual Explanation
 // Currency Exchange as a Graph:
