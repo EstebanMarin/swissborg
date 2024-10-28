@@ -44,12 +44,30 @@ Run
 
 ```bash
 scala-cli run .
+main  scala-cli run .
+SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See http://www.slf4j.org/codes.html#StaticLoggerBinder for further details.
+Starting Algorithm
+Follow this arbirtrage opportunity => BTC -> EUR -> DAI -> BORG
 ```
 
 test
 
 ```bash
 scala-cli test .
+main  scala-cli test .
+Starting Algorithm
+Map(1 -> 0.0, 2 -> -Infinity, 3 -> -Infinity, 4 -> -Infinity)
+Starting Algorithm
+com.estebanmarin.algebras.BellmanFordAlgSuite:
+  + BellmanFordAlg should detect negative cycles 0.105s
+  + BellmanFordAlg should arrive to the correct result simple example 0.002s
+com.estebanmarin.algebras.GraphDataStructureSuite:
+  + Create unique Vertices 0.007s
+  + Create edges of graph 0.001s
+  + Simple rate -log(rate) transformation 0.002s
+  + GraphDataStructure should create a graph from rates 0.0s
 ```
 
 format
