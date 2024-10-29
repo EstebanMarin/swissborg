@@ -37,7 +37,7 @@ I find exciting finding a swiss company that does crypto but underlying is a wea
 ### Nix flakes
 
 ```bash
- scala@Estebans-MacBook-Pro  ~/mine/swissborg   main ● ?  nix develop                                         ✔  2220  11:45:40 
+$ nix develop                                       
 warning: Git tree '/Users/scala/mine/swissborg' is dirty
 🔨 Welcome to swissborg-shell
 
