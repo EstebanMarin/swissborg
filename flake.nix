@@ -18,7 +18,7 @@
           name = "swissborg-shell";
           typelevelShell = {
             # jdk.package = builtins.getAttr "jdk${pkgs.lib.fileContents ./.java-version}" pkgs;
-            jdk.package = pkgs.jdk11;
+            jdk.package = pkgs.jdk21;
           };
         };
       });
