@@ -34,6 +34,42 @@ I find exciting finding a swiss company that does crypto but underlying is a wea
 
 ## Commands
 
+# Nix flakes
+
+```
+ scala@Estebans-MacBook-Pro  ~/mine/swissborg   main ● ?  nix develop                                         ✔  2220  11:45:40 
+warning: Git tree '/Users/scala/mine/swissborg' is dirty
+🔨 Welcome to swissborg-shell
+
+[[general commands]]
+
+  menu      - prints this menu
+  metals    - Language server for Scala
+  sbt       - Build tool for Scala, Java and more
+  scala-cli - Command-line tool to interact with the Scala language
+
+[versions]
+
+  Java - 11.0.22
+
+[swissborg-shell]$ scala-cli test .
+Compiling project (Scala 3.5.2, JVM (21))
+Compiled project (Scala 3.5.2, JVM (21))
+Compiling project (test, Scala 3.5.2, JVM (21))
+Compiled project (test, Scala 3.5.2, JVM (21))
+Starting Algorithm
+Map(1 -> 0.0, 2 -> -Infinity, 3 -> -Infinity, 4 -> -Infinity)
+Starting Algorithm
+com.estebanmarin.algebras.BellmanFordAlgSuite:
+  + BellmanFordAlg should detect negative cycles 0.099s
+  + BellmanFordAlg should arrive to the correct result simple example 0.003s
+com.estebanmarin.algebras.GraphDataStructureSuite:
+  + Create unique Vertices 0.005s
+  + Create edges of graph 0.003s
+  + Simple rate -log(rate) transformation 0.003s
+  + GraphDataStructure should create a graph from rates 0.001s
+```
+
 Compile
 
 ```bash

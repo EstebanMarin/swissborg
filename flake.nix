@@ -15,9 +15,10 @@
       in {
         devShell = pkgs.devshell.mkShell {
           imports = [ typelevel-nix.typelevelShell ];
-          name = "dreamwork-shell";
+          name = "swissborg-shell";
           typelevelShell = {
-            jdk.package = builtins.getAttr "jdk${pkgs.lib.fileContents ./.java-version}" pkgs;
+            # jdk.package = builtins.getAttr "jdk${pkgs.lib.fileContents ./.java-version}" pkgs;
+            jdk.package = pkgs.jdk11;
           };
         };
       });
