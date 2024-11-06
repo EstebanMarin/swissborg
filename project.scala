@@ -1,6 +1,6 @@
 // Main
 //> using scala "3.5.2"
-//> using toolkit "typelevel:0.1.28"
+//> using toolkit "typelevel:0.1.29"
 
 //> using dependency "io.circe::circe-core:0.14.10"
 //> using dependency "io.circe::circe-generic:0.14.10"
